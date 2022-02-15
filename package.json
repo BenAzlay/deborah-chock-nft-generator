@@ -1,12 +1,12 @@
 {
   "name": "hashlips_art_engine",
   "version": "1.0.5",
-  "description": "HashLips Art Engine is a tool used to create multiple different instances of artworks based on provided layers.",
+  "description": "HashLips Art Engine is a tool used to create multiple different instances of artworks based on provided frames.",
   "main": "index.js",
   "bin": "index.js",
   "pkg": {
     "assets": [
-      "layers/**/*",
+      "frames/**/*",
       "node_modules/**/*",
       "src/**/*"
     ]
@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "canvas": "^2.8.0",
+    "gifencoder": "^2.0.1",
     "sha1": "^1.1.1"
   }
 }

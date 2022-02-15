@@ -44,17 +44,17 @@ npm install
 
 ## Usage ℹ️
 
-Create your different layers as folders in the 'layers' directory, and add all the layer assets in these directories. You can name the assets anything as long as it has a rarity weight attached in the file name like so: `example element#70.png`. You can optionally change the delimiter `#` to anything you would like to use in the variable `rarityDelimiter` in the `src/config.js` file.
+Create your different frames as folders in the 'frames' directory, and add all the frame assets in these directories. You can name the assets anything as long as it has a rarity weight attached in the file name like so: `example element#70.png`. You can optionally change the delimiter `#` to anything you would like to use in the variable `rarityDelimiter` in the `src/config.js` file.
 
-Once you have all your layers, go into `src/config.js` and update the `layerConfigurations` objects `layersOrder` array to be your layer folders name in order of the back layer to the front layer.
+Once you have all your frames, go into `src/config.js` and update the `frameConfigurations` objects `framesOrder` array to be your frame folders name in order of the back frame to the front frame.
 
-_Example:_ If you were creating a portrait design, you might have a background, then a head, a mouth, eyes, eyewear, and then headwear, so your `layersOrder` would look something like this:
+_Example:_ If you were creating a portrait design, you might have a background, then a head, a mouth, eyes, eyewear, and then headwear, so your `framesOrder` would look something like this:
 
 ```js
-const layerConfigurations = [
+const frameConfigurations = [
   {
     growEditionSizeTo: 100,
-    layersOrder: [
+    framesOrder: [
       { name: "Head" },
       { name: "Mouth" },
       { name: "Eyes" },
@@ -65,18 +65,18 @@ const layerConfigurations = [
 ];
 ```
 
-The `name` of each layer object represents the name of the folder (in `/layers/`) that the images reside in.
+The `name` of each frame object represents the name of the folder (in `/frames/`) that the images reside in.
 
-Optionally you can now add multiple different `layerConfigurations` to your collection. Each configuration can be unique and have different layer orders, use the same layers or introduce new ones. This gives the artist flexibility when it comes to fine tuning their collections to their needs.
+Optionally you can now add multiple different `frameConfigurations` to your collection. Each configuration can be unique and have different frame orders, use the same frames or introduce new ones. This gives the artist flexibility when it comes to fine tuning their collections to their needs.
 
-_Example:_ If you were creating a portrait design, you might have a background, then a head, a mouth, eyes, eyewear, and then headwear and you want to create a new race or just simple re-order the layers or even introduce new layers, then you're `layerConfigurations` and `layersOrder` would look something like this:
+_Example:_ If you were creating a portrait design, you might have a background, then a head, a mouth, eyes, eyewear, and then headwear and you want to create a new race or just simple re-order the frames or even introduce new frames, then you're `frameConfigurations` and `framesOrder` would look something like this:
 
 ```js
-const layerConfigurations = [
+const frameConfigurations = [
   {
     // Creates up to 50 artworks
     growEditionSizeTo: 50,
-    layersOrder: [
+    framesOrder: [
       { name: "Background" },
       { name: "Head" },
       { name: "Mouth" },
@@ -88,7 +88,7 @@ const layerConfigurations = [
   {
     // Creates an additional 100 artworks
     growEditionSizeTo: 150,
-    layersOrder: [
+    framesOrder: [
       { name: "Background" },
       { name: "Head" },
       { name: "Eyes" },
@@ -101,21 +101,21 @@ const layerConfigurations = [
 ];
 ```
 
-Update your `format` size, ie the outputted image size, and the `growEditionSizeTo` on each `layerConfigurations` object, which is the amount of variation outputted.
+Update your `format` size, ie the outputted image size, and the `growEditionSizeTo` on each `frameConfigurations` object, which is the amount of variation outputted.
 
-You can mix up the `layerConfigurations` order on how the images are saved by setting the variable `shuffleLayerConfigurations` in the `config.js` file to true. It is false by default and will save all images in numerical order.
+You can mix up the `frameConfigurations` order on how the images are saved by setting the variable `shuffleFrameConfigurations` in the `config.js` file to true. It is false by default and will save all images in numerical order.
 
 If you want to have logs to debug and see what is happening when you generate images you can set the variable `debugLogs` in the `config.js` file to true. It is false by default, so you will only see general logs.
 
-If you want to play around with different blending modes, you can add a `blend: MODE.colorBurn` field to the layersOrder object. If you need a layers to have a different opacity then you can add the `opacity: 0.7` field to the layersOrder object as well. Both the `blend: MODE.colorBurn` and `opacity: 0.7` can be addes on the same layer if you want to.
+If you want to play around with different blending modes, you can add a `blend: MODE.colorBurn` field to the framesOrder object. If you need a frames to have a different opacity then you can add the `opacity: 0.7` field to the framesOrder object as well. Both the `blend: MODE.colorBurn` and `opacity: 0.7` can be addes on the same frame if you want to.
 
 Here is an example on how you can play around with both filter fields:
 
 ```js
-const layerConfigurations = [
+const frameConfigurations = [
   {
     growEditionSizeTo: 5,
-    layersOrder: [
+    framesOrder: [
       { name: "Background" },
       { name: "Eyeball" },
       { name: "Eye color", blend: MODE.colorBurn },

@@ -8,11 +8,13 @@ const description =
   "This is the description of your NFT project, remember to replace this";
 const baseUri = "ipfs://NewUriToReplace";
 
-const layerConfigurations = [
+const successionNumber = 3;
+
+const frameConfigurations = [
   // White BG
   // {
   //   growEditionSizeTo: 34,
-  //   layersOrder: [
+  //   framesOrder: [
   //     { name: "background_white" },
   //     { name: "face" }
   //   ],
@@ -27,13 +29,13 @@ const layerConfigurations = [
    *  */
 ];
 
-const shuffleLayerConfigurations = false; // TODO: set to true
+const shuffleFrameConfigurations = false; // TODO: set to true
 
 const debugLogs = false;
 
 const format = {
-  width: 512,
-  height: 512,
+  width: 320,
+  height: 249,
 };
 
 const background = {
@@ -62,10 +64,11 @@ module.exports = {
   description,
   background,
   uniqueDnaTorrance,
-  layerConfigurations,
+  frameConfigurations,
   rarityDelimiter,
   preview,
-  shuffleLayerConfigurations,
+  shuffleFrameConfigurations,
   debugLogs,
-  extraMetadata
+  extraMetadata,
+  successionNumber
 };
