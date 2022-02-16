@@ -11,22 +11,14 @@ const baseUri = "ipfs://NewUriToReplace";
 const successionNumber = 3;
 
 const frameConfigurations = [
-  // White BG
-  // {
-  //   growEditionSizeTo: 34,
-  //   framesOrder: [
-  //     { name: "background_white" },
-  //     { name: "face" }
-  //   ],
-  // }
   {
     growEditionSizeTo: 10,
     edition: 'love'
+  },
+  {
+    growEditionSizeTo: 15, // + 5
+    edition: 'parenthood'
   }
-  /*** TODO: change object struct to:
-   * growEditionSizeTo: number,
-   * edition: string => subfolder name i.e. love
-   *  */
 ];
 
 const shuffleFrameConfigurations = false; // TODO: set to true
@@ -37,6 +29,8 @@ const format = {
   width: 320,
   height: 249,
 };
+
+const delayBetweenFrames = 1000;
 
 const background = {
   generate: true,
@@ -70,5 +64,6 @@ module.exports = {
   shuffleFrameConfigurations,
   debugLogs,
   extraMetadata,
-  successionNumber
+  successionNumber,
+  delayBetweenFrames
 };

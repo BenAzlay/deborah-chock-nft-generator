@@ -10,7 +10,6 @@ const { createCanvas, loadImage } = require(path.join(
   "/node_modules/canvas"
 ));
 const GIFEncoder = require('gifencoder');
-const { encode } = require("punycode");
 const buildDir = path.join(basePath, "/build");
 const framesDir = path.join(basePath, "/frames");
 console.log(path.join(basePath, "/src/config.js"));
@@ -25,16 +24,15 @@ const {
   shuffleFrameConfigurations,
   debugLogs,
   extraMetadata,
-  successionNumber
+  successionNumber,
+  delayBetweenFrames
 } = require(path.join(basePath, "/src/config.js"));
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
-var metadataList = [];
+const metadataList = [];
 var attributesList = [];
 var dnaList = new Set();
 const DNA_DELIMITER = '-';
-
-const encoder = new GIFEncoder(format.width, format.height);
 
 const buildSetup = () => {
   if (fs.existsSync(buildDir)) {
@@ -141,33 +139,20 @@ const loadFrameImg = async (_frame) => {
 };
 
 const createGif = (_renderObjectArray, _editionCount, _edition) => {
+  const encoder = new GIFEncoder(format.width, format.height);
+
   encoder.createReadStream().pipe(fs.createWriteStream(`${buildDir}/images/${_editionCount}.gif`));
 
   encoder.start();
   encoder.setRepeat(0);   
-  encoder.setDelay(500);  
+  encoder.setDelay(delayBetweenFrames);  
   encoder.setQuality(10); 
   _renderObjectArray.forEach((_renderObject) => {
-    console.log("~ _renderObject", _renderObject)
     ctx.drawImage(_renderObject.loadedImage, 0, 0, format.width, format.height);
     encoder.addFrame(ctx);
   })
   encoder.finish()
   addAttributes(_renderObjectArray, _editionCount, _edition);
-};
-
-const constructFrameToDna = (_dna = '', _frames = []) => {
-  console.log("~ _frames", _frames)
-  let mappedDnaToFrames = _frames.map((frame, index) => {
-    let selectedElement = frame.elements.find(
-      (e) => e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
-    );
-    return {
-      name: frame.name,
-      selectedElement: selectedElement,
-    };
-  });
-  return mappedDnaToFrames;
 };
 
 const getFramesFromDna = (_dna = '', _frames = []) => {
@@ -217,7 +202,6 @@ const writeMetaData = (_data) => {
 
 const saveMetaDataSingleFile = (_editionCount) => {
   let metadata = metadataList.find((meta) => meta.name.includes(_editionCount));
-  console.log("~ metadata", metadata)
   debugLogs
     ? console.log(
         `Writing metadata for ${_editionCount}: ${JSON.stringify(metadata)}`
@@ -262,18 +246,17 @@ const startCreating = async () => {
     ? console.log("Editions left to create: ", abstractedIndexes)
     : null;
   while (frameConfigIndex < frameConfigurations.length) {
-    // ! changes start here
-    const frames = framesSetup(
+    let frames = framesSetup(
       frameConfigurations[frameConfigIndex].edition
     );
+    console.log("EDITION:", frames.name)
     while (
       editionCount <= frameConfigurations[frameConfigIndex].growEditionSizeTo
     ) {
       let newDna = createDna(frames);
-      console.log("~ newDna", newDna)
+      // console.log("~ newDna", newDna)
       if (isDnaUnique(dnaList, newDna)) {
         let dnaFrames = getFramesFromDna(newDna, frames);
-        console.log("~ dnaFrames", dnaFrames)
         let loadedElements = [];
 
         dnaFrames.forEach((frame) => {
@@ -308,7 +291,7 @@ const startCreating = async () => {
     }
     frameConfigIndex++;
   }
-  // writeMetaData(JSON.stringify(metadataList, null, 2));
+  writeMetaData(JSON.stringify(metadataList, null, 2));
 };
 
 module.exports = { startCreating, buildSetup };
