@@ -12,13 +12,13 @@ const successionNumber = 3;
 
 const frameConfigurations = [
   {
-    growEditionSizeTo: 10,
+    growEditionSizeTo: 1,
     edition: 'love'
   },
-  {
-    growEditionSizeTo: 15, // + 5
-    edition: 'parenthood'
-  }
+  // {
+  //   growEditionSizeTo: 15, // + 5
+  //   edition: 'parenthood'
+  // }
 ];
 
 const shuffleFrameConfigurations = false; // TODO: set to true
@@ -30,7 +30,7 @@ const format = {
   height: 249,
 };
 
-const delayBetweenFrames = 1000;
+const delayBetweenFrames = 0;
 
 const background = {
   generate: true,

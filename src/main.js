@@ -146,10 +146,31 @@ const createGif = (_renderObjectArray, _editionCount, _edition) => {
   encoder.start();
   encoder.setRepeat(0);   
   encoder.setDelay(delayBetweenFrames);  
-  encoder.setQuality(10); 
-  _renderObjectArray.forEach((_renderObject) => {
-    ctx.drawImage(_renderObject.loadedImage, 0, 0, format.width, format.height);
-    encoder.addFrame(ctx);
+  encoder.setQuality(10);
+  _renderObjectArray.forEach((_renderObject, index) => {
+    
+    for (let x = 0; x < format.width; x += 20) {
+      let xCoord = index === 0 ?
+        x :
+          index === 1 ?
+          0 :
+          x * (-1);
+      let yCoord = index === 1 ? x : 0;
+      if (yCoord >= format.height) break;
+      ctx.clearRect(0, 0, format.width, format.width); // Clean up
+      let backgroundImg = index < successionNumber - 1 ?
+        _renderObjectArray[index + 1].loadedImage :
+        _renderObjectArray[0].loadedImage;
+
+      // ctx.drawImage(backgroundImg, x - format.width, 0, format.width, format.height); // following image
+      ctx.drawImage(backgroundImg, 0, 0, format.width, format.height); // base image
+      
+      ctx.drawImage(_renderObject.loadedImage, xCoord, yCoord, format.width, format.height); // moving image
+      encoder.addFrame(ctx);
+     }
+    // ctx.drawImage(_renderObject.loadedImage, 0, 0, format.width, format.height);
+    // encoder.addFrame(ctx);
+
   })
   encoder.finish()
   addAttributes(_renderObjectArray, _editionCount, _edition);
