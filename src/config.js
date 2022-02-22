@@ -12,7 +12,7 @@ const successionNumber = 3;
 
 const frameConfigurations = [
   {
-    growEditionSizeTo: 1,
+    growEditionSizeTo: 5,
     edition: 'love'
   },
   // {
@@ -24,6 +24,8 @@ const frameConfigurations = [
 const shuffleFrameConfigurations = false; // TODO: set to true
 
 const debugLogs = false;
+
+const directions = ['up', 'down', 'left', 'right'];
 
 const format = {
   width: 320,
@@ -65,5 +67,6 @@ module.exports = {
   debugLogs,
   extraMetadata,
   successionNumber,
-  delayBetweenFrames
+  delayBetweenFrames,
+  directions
 };

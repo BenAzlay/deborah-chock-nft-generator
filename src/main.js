@@ -25,7 +25,8 @@ const {
   debugLogs,
   extraMetadata,
   successionNumber,
-  delayBetweenFrames
+  delayBetweenFrames,
+  directions
 } = require(path.join(basePath, "/src/config.js"));
 const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
@@ -122,12 +123,14 @@ const addMetadata = (_dna, _number, _edition) => {
   attributesList = [];
 };
 
-const addAttributes = (_frames, _editionCount, _edition) => {
-  const value = _frames.map(frame => frame.name)
+const addAttributes = (_frames, _editionCount, _edition, _directions) => {
+  const imagesName = _frames.map(frame => frame.frame.name)
+
   attributesList.push({
     edition: _edition,
     number: _editionCount,
-    value: value,
+    images: imagesName,
+    directions: _directions
   });
 };
 
@@ -138,6 +141,28 @@ const loadFrameImg = async (_frame) => {
   });
 };
 
+const generateDirections = () => {
+  const imgDirections = []
+  for (let i = 0; i < successionNumber; i++) {
+    let random = Math.floor(Math.random() * 4);
+    imgDirections.push(directions[random]);
+  }
+  return imgDirections;
+}
+
+const getXYCoords = (direction, x) => {
+  switch(direction) {
+    case 'up':
+      return { xCoord: 0, yCoord: x * (-1) };
+    case 'down':
+      return { xCoord: 0, yCoord: x };
+    case 'left':
+      return { xCoord: x * (-1), yCoord: 0 };
+    case 'right':
+      return { xCoord: x, yCoord: 0 };
+  }
+}
+
 const createGif = (_renderObjectArray, _editionCount, _edition) => {
   const encoder = new GIFEncoder(format.width, format.height);
 
@@ -145,35 +170,28 @@ const createGif = (_renderObjectArray, _editionCount, _edition) => {
 
   encoder.start();
   encoder.setRepeat(0);   
-  encoder.setDelay(delayBetweenFrames);  
+  encoder.setDelay(delayBetweenFrames);
   encoder.setQuality(10);
+  const imgDirections = generateDirections();
+  console.log("~ imgDirections", imgDirections)
   _renderObjectArray.forEach((_renderObject, index) => {
-    
     for (let x = 0; x < format.width; x += 20) {
-      let xCoord = index === 0 ?
-        x :
-          index === 1 ?
-          0 :
-          x * (-1);
-      let yCoord = index === 1 ? x : 0;
-      if (yCoord >= format.height) break;
+      let { xCoord, yCoord } = getXYCoords(imgDirections[index], x);
+      if (yCoord >= format.height || yCoord <= format.height * (-1)) break; // image left the frame
       ctx.clearRect(0, 0, format.width, format.width); // Clean up
       let backgroundImg = index < successionNumber - 1 ?
         _renderObjectArray[index + 1].loadedImage :
         _renderObjectArray[0].loadedImage;
 
-      // ctx.drawImage(backgroundImg, x - format.width, 0, format.width, format.height); // following image
       ctx.drawImage(backgroundImg, 0, 0, format.width, format.height); // base image
       
       ctx.drawImage(_renderObject.loadedImage, xCoord, yCoord, format.width, format.height); // moving image
       encoder.addFrame(ctx);
      }
-    // ctx.drawImage(_renderObject.loadedImage, 0, 0, format.width, format.height);
-    // encoder.addFrame(ctx);
 
   })
   encoder.finish()
-  addAttributes(_renderObjectArray, _editionCount, _edition);
+  addAttributes(_renderObjectArray, _editionCount, _edition, imgDirections);
 };
 
 const getFramesFromDna = (_dna = '', _frames = []) => {
