@@ -37,7 +37,7 @@ const DNA_DELIMITER = '-';
 
 const buildSetup = () => {
   if (fs.existsSync(buildDir)) {
-    fs.rmdirSync(buildDir, { recursive: true });
+    fs.rmSync(buildDir, { recursive: true });
   }
   fs.mkdirSync(buildDir);
   fs.mkdirSync(path.join(buildDir, "/json"));
@@ -53,11 +53,6 @@ const getRarityWeight = (_str) => {
     nameWithoutWeight = 1;
   }
   return nameWithoutWeight;
-};
-
-const cleanDna = (_str) => {
-  var dna = Number(_str.split(":").shift());
-  return dna;
 };
 
 const cleanName = (_str) => {
@@ -89,17 +84,6 @@ const framesSetup = (theme) => {
   return frames;
 };
 
-const genColor = () => {
-  let hue = Math.floor(Math.random() * 360);
-  let pastel = `hsl(${hue}, 100%, ${background.brightness})`;
-  return pastel;
-};
-
-const drawBackground = () => {
-  ctx.fillStyle = genColor();
-  ctx.fillRect(0, 0, format.width, format.height);
-};
-
 const addMetadata = (_dna, _number) => {
   let dateTime = Date.now();
   let tempMetadata = {
@@ -123,7 +107,6 @@ const addAttributes = (_frames, _editionCount, _theme, _directions) => {
   })
   const frameNames = _frames.map(frame => frame.frame.name)
   for (let i = 0; i < frameNames.length; i++) {
-    console.log("~ name", frameNames[i])
     attributesList.push({ value: frameNames[i] })
   }
 };
@@ -167,7 +150,6 @@ const createGif = (_renderObjectArray, _editionCount, _theme) => {
   encoder.setDelay(delayBetweenFrames);
   encoder.setQuality(10);
   const imgDirections = generateDirections();
-  console.log("~ imgDirections", imgDirections)
   _renderObjectArray.forEach((_renderObject, index) => {
     for (let x = 0; x < format.width; x += 20) {
       let { xCoord, yCoord } = getXYCoords(imgDirections[index], x);
@@ -287,7 +269,6 @@ const startCreating = async () => {
       editionCount <= frameConfigurations[frameConfigIndex].growEditionSizeTo
     ) {
       let newDna = createDna(frames);
-      // console.log("~ newDna", newDna)
       if (isDnaUnique(dnaList, newDna)) {
         let dnaFrames = getFramesFromDna(newDna, frames);
         let loadedElements = [];
@@ -298,7 +279,6 @@ const startCreating = async () => {
 
         await Promise.all(loadedElements).then((renderObjectArray) => {
           debugLogs ? console.log("Clearing canvas") : null;
-          // ctx.clearRect(0, 0, format.width, format.height);
           createGif(renderObjectArray, editionCount, frames.theme);
           addMetadata(newDna, editionCount);
           saveMetaDataSingleFile(editionCount);

@@ -40,7 +40,8 @@ const background = {
 };
 
 const extraMetadata = {
-  creator: "Deborah Chock",
+  artist: "Deborah Chock",
+  developer: "Benjamin Azoulay"
 };
 
 const rarityDelimiter = "#";
