@@ -13,10 +13,10 @@ let rawdata = fs.readFileSync(`${basePath}/build/json/_metadata.json`);
 let data = JSON.parse(rawdata);
 
 data.forEach((item) => {
-  let imageName = item.name.substr(1, item.name.length)
-  item.image = `${baseUri}/${imageName}.gif`;
+  let edition = item.edition
+  item.image = `${baseUri}/${edition}.gif`;
   fs.writeFileSync(
-    `${basePath}/build/json/${imageName}.json`,
+    `${basePath}/build/json/${edition}.json`,
     JSON.stringify(item, null, 2)
   );
 });

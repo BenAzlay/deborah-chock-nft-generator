@@ -13,11 +13,11 @@ const successionNumber = 3;
 const frameConfigurations = [
   {
     growEditionSizeTo: 5,
-    edition: 'love'
+    theme: 'love'
   },
   {
     growEditionSizeTo: 10, // + 5
-    edition: 'parenthood'
+    theme: 'parenthood'
   }
 ];
 

@@ -81,19 +81,12 @@ const getElements = (path) => {
     });
 };
 
-const framesSetup = (edition) => {
+const framesSetup = (theme) => {
   const frames = {
-    name: edition,
-    elements: getElements(`${framesDir}/${edition}/`)
+    theme: theme,
+    elements: getElements(`${framesDir}/${theme}/`)
   };
   return frames;
-};
-
-const saveImage = (_editionCount) => {
-  fs.writeFileSync(
-    `${buildDir}/images/${_editionCount}.png`,
-    canvas.toBuffer("image/png")
-  );
 };
 
 const genColor = () => {
@@ -107,14 +100,14 @@ const drawBackground = () => {
   ctx.fillRect(0, 0, format.width, format.height);
 };
 
-const addMetadata = (_dna, _number, _edition) => {
+const addMetadata = (_dna, _number) => {
   let dateTime = Date.now();
   let tempMetadata = {
     dna: sha1(_dna),
-    name: `#${_number}`,
+    edition: _number,
+    name: `Deborah Chock Story #${_number}`,
     description: description,
     image: `${baseUri}/${_number}.gif`,
-    edition: _edition,
     date: dateTime,
     ...extraMetadata,
     attributes: attributesList,
@@ -123,15 +116,16 @@ const addMetadata = (_dna, _number, _edition) => {
   attributesList = [];
 };
 
-const addAttributes = (_frames, _editionCount, _edition, _directions) => {
-  const imagesName = _frames.map(frame => frame.frame.name)
-
+const addAttributes = (_frames, _editionCount, _theme, _directions) => {
   attributesList.push({
-    edition: _edition,
-    number: _editionCount,
-    images: imagesName,
-    directions: _directions
-  });
+    trait_type: 'Theme',
+    value: _theme
+  })
+  const frameNames = _frames.map(frame => frame.frame.name)
+  for (let i = 0; i < frameNames.length; i++) {
+    console.log("~ name", frameNames[i])
+    attributesList.push({ value: frameNames[i] })
+  }
 };
 
 const loadFrameImg = async (_frame) => {
@@ -163,7 +157,7 @@ const getXYCoords = (direction, x) => {
   }
 }
 
-const createGif = (_renderObjectArray, _editionCount, _edition) => {
+const createGif = (_renderObjectArray, _editionCount, _theme) => {
   const encoder = new GIFEncoder(format.width, format.height);
 
   encoder.createReadStream().pipe(fs.createWriteStream(`${buildDir}/images/${_editionCount}.gif`));
@@ -191,7 +185,7 @@ const createGif = (_renderObjectArray, _editionCount, _edition) => {
 
   })
   encoder.finish()
-  addAttributes(_renderObjectArray, _editionCount, _edition, imgDirections);
+  addAttributes(_renderObjectArray, _editionCount, _theme, imgDirections);
 };
 
 const getFramesFromDna = (_dna = '', _frames = []) => {
@@ -286,9 +280,9 @@ const startCreating = async () => {
     : null;
   while (frameConfigIndex < frameConfigurations.length) {
     let frames = framesSetup(
-      frameConfigurations[frameConfigIndex].edition
+      frameConfigurations[frameConfigIndex].theme
     );
-    console.log("EDITION:", frames.name)
+    console.log("THEME:", frames.theme)
     while (
       editionCount <= frameConfigurations[frameConfigIndex].growEditionSizeTo
     ) {
@@ -305,8 +299,8 @@ const startCreating = async () => {
         await Promise.all(loadedElements).then((renderObjectArray) => {
           debugLogs ? console.log("Clearing canvas") : null;
           // ctx.clearRect(0, 0, format.width, format.height);
-          createGif(renderObjectArray, editionCount, frames.name);
-          addMetadata(newDna, editionCount, frames.name);
+          createGif(renderObjectArray, editionCount, frames.theme);
+          addMetadata(newDna, editionCount);
           saveMetaDataSingleFile(editionCount);
           console.log(
             `Created edition: ${abstractedIndexes[0]}, with DNA: ${sha1(
