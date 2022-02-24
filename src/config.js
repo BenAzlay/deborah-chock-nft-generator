@@ -6,7 +6,7 @@ const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
 const { MODE } = require(path.join(basePath, "src/blendMode.js"));
 const description =
   "This is the description of your NFT project, remember to replace this";
-const baseUri = "ipfs://NewUriToReplace";
+const baseUri = "ipfs://QmbQa6yoL6DTGCWwdERMLogjVv7VDBug4PujXqAvFjbwHU";
 
 const successionNumber = 3;
 
@@ -15,10 +15,10 @@ const frameConfigurations = [
     growEditionSizeTo: 5,
     edition: 'love'
   },
-  // {
-  //   growEditionSizeTo: 15, // + 5
-  //   edition: 'parenthood'
-  // }
+  {
+    growEditionSizeTo: 10, // + 5
+    edition: 'parenthood'
+  }
 ];
 
 const shuffleFrameConfigurations = false; // TODO: set to true
